@@ -1,8 +1,13 @@
 .login_screen {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   flex: 1;
+  >h1 {
+    position: absolute;
+    top: 0;
+  }
   .login-block {
     width: 420px;
     padding: 20px;

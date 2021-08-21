@@ -77,7 +77,7 @@ const Landing = () => {
           </div>
         </div>
         <div className="button-container row">
-          <button disabled={!name && !url} onClick={generateUuid}>
+          <button disabled={!name || !url} onClick={generateUuid}>
             Generate
           </button>
         </div>
