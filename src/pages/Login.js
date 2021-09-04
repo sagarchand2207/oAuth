@@ -6,7 +6,6 @@ const Login = () => {
   const { email, password } = state;
 
   const login = async () => {
-    const data = { email: email, password: password };
     try {
       const url = "http://wallet.vaionex.com/v1/";
       const res = await fetch(`${url}auth`, {
@@ -14,8 +13,9 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          email: email,
+          password: password,
         },
-        body: JSON.stringify(data),
       });
       const jsonRes = await res.json();
       const {
