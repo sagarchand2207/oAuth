@@ -7,6 +7,9 @@ const Landing = () => {
     name: "",
     url: "",
   });
+
+  const { clientSecret, clientKey, name, url } = state;
+
   const copyToClip = (val) => {
     navigator.clipboard.writeText(val).then(
       function () {
@@ -19,6 +22,7 @@ const Landing = () => {
   };
 
   const generateUuid = async () => {
+
     const data = { name: name, redirectURL: url };
     try {
       const url = "http://wallet.vaionex.com/v1/oauth/register";
@@ -46,7 +50,6 @@ const Landing = () => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const { clientSecret, clientKey, name, url } = state;
   return (
     <div className="container landing_screen">
       <div className="landing-contents">
