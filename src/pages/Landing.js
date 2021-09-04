@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Fetch from "../util/Fetch";
 
 const Landing = () => {
   const [state, setState] = useState({
@@ -22,24 +23,21 @@ const Landing = () => {
   };
 
   const generateUuid = async () => {
-
     const data = { name: name, redirectURL: url };
     try {
-      const url = "http://wallet.vaionex.com/v1/oauth/register";
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
+      const res = await Fetch.post(
+        "oauth/register",
+        {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
-        body: JSON.stringify(data),
-      });
-      const jsonRes = await res.json();
+        data
+      );
       const {
         data: {
           msg: { clientKey, clientSecret },
         },
-      } = jsonRes;
+      } = res;
       setState({ ...state, clientKey, clientSecret });
     } catch (e) {
       console.log(e.toString());
