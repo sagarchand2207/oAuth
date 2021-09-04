@@ -1,34 +1,91 @@
 import React, { useState } from "react";
 
 const Landing = () => {
-  const [state, setState] = useState({ id: "", key: "" });
+  const [state, setState] = useState({
+    clientSecret: "",
+    clientKey: "",
+    name: "",
+    url: "",
+  });
   const copyToClip = (val) => {
     navigator.clipboard.writeText(val).then(
       function () {
         alert("copied successfully");
       },
       function (err) {
-        console.error("Could not copy text: ", err);
+        alert("Could not copy text");
       }
     );
   };
 
   const generateUuid = async () => {
-    setState({ id: "56z7sd755sdgau57", key: "ajgsuag77yibgbjk87" });
+    const data = { name: name, redirectURL: url };
+    try {
+      const url = "http://wallet.vaionex.com/v1/oauth/register";
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(data),
+      });
+      const jsonRes = await res.json();
+      const {
+        data: {
+          msg: { clientKey, clientSecret },
+        },
+      } = jsonRes;
+      setState({ ...state, clientKey, clientSecret });
+    } catch (e) {
+      console.log(e.toString());
+    }
   };
-  const { id, key } = state;
+
+  const handleChange = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const { clientSecret, clientKey, name, url } = state;
   return (
     <div className="container landing_screen">
       <div className="landing-contents">
+        <div className="details-container">
+          <div className="u_details_container">
+            <label>Name</label>
+            <div className="u_details">
+              <input
+                name="name"
+                value={name}
+                className="text-input"
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="u_details_container">
+            <label>Url</label>
+            <div className="u_details">
+              <input
+                name="url"
+                value={url}
+                onChange={handleChange}
+                className="text-input"
+              />
+            </div>
+          </div>
+        </div>
         <div className="button-container row">
-          <button onClick={generateUuid}>Generate</button>
+          <button disabled={!name && !url} onClick={generateUuid}>
+            Generate
+          </button>
         </div>
         <div className="details-container">
           <div className="u_details_container">
-            <label>Id</label>
+            <label>Secret Id</label>
             <div className="u_details">
-              <input value={id} className="text-input" disabled />
-              <button onClick={() => copyToClip(id)} className="btn">
+              <input value={clientSecret} className="text-input" disabled />
+              <button onClick={() => copyToClip(clientSecret)} className="btn">
                 Copy
               </button>
             </div>
@@ -37,8 +94,8 @@ const Landing = () => {
           <div className="u_details_container">
             <label>Key</label>
             <div className="u_details">
-              <input value={key} className="text-input" disabled />
-              <button onClick={() => copyToClip(key)} className="btn">
+              <input value={clientKey} className="text-input" disabled />
+              <button onClick={() => copyToClip(clientKey)} className="btn">
                 Copy
               </button>
             </div>
